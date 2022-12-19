@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="19-12-2022-create-table-product" author="Kkotto">
+        <createTable tableName="item">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar"/>
+            <column name="price" type="decimal"/>
+            <column name="create_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="19-12-2022-create-table-cards" author="Kkotto">
+        <createTable tableName="card">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="owner_name" type="varchar"/>
+            <column name="discount" type="integer"/>
+            <column name="card_last_digits" type="integer"/>
+            <column name="create_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
