@@ -11,4 +11,8 @@ public class CardDto {
     private String ownerName;
     private Integer discount;
     private Integer cardLastDigits;
+
+    public String toString() {
+        return String.format("Card owner: %s\nDiscount: %d%%\nLast digits: %d", ownerName, discount, cardLastDigits);
+    }
 }

@@ -1,10 +1,13 @@
 package com.kkotto.Clevertec.service.impl;
 
+import com.kkotto.Clevertec.repository.CardRepository;
 import com.kkotto.Clevertec.repository.ProductRepository;
 import com.kkotto.Clevertec.service.ReceiptService;
+import com.kkotto.Clevertec.service.model.entity.Card;
 import com.kkotto.Clevertec.service.model.entity.Product;
 import com.kkotto.Clevertec.service.model.request.PaymentDto;
 import com.kkotto.Clevertec.service.model.request.ProductPaymentDto;
+import com.kkotto.Clevertec.service.model.response.CardDto;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
 import com.kkotto.Clevertec.service.model.response.ReceiptDto;
 import com.kkotto.Clevertec.service.util.FileUtil;
@@ -25,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReceiptServiceImpl implements ReceiptService {
     private final ProductRepository productRepository;
+    private final CardRepository cardRepository;
     private final FileUtil fileUtil = FileUtil.getInstance();
 
     @Transactional
@@ -37,17 +41,24 @@ public class ReceiptServiceImpl implements ReceiptService {
         BigDecimal taxableTotal = countTaxableTotal(productsDto);
         double vatValue = 0.17;
         BigDecimal vatAmount = taxableTotal.multiply(BigDecimal.valueOf(vatValue));
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
+        LocalDateTime creationTime = LocalDateTime.now();
         ReceiptDto receiptDto = ReceiptDto.builder()
-                .payDate(LocalDate.now())
-                .payTime(LocalTime.now())
-                .shopId(paymentDto.getShopId())
-                .cashierId(paymentDto.getCashierId())
+                .payDate(creationTime.toLocalDate())
+                .payTime(creationTime.toLocalTime())
                 .products(productsDto)
                 .taxableTotal(taxableTotal)
                 .vatAmount(vatAmount)
                 .totalForPayment(vatAmount.add(taxableTotal))
                 .build();
-        writeReceiptToFile(receiptDto);
+        Card card = cardRepository.findCardByCardLastDigits(paymentDto.getCardNumber());
+        CardDto cardDto = CardDto.builder()
+                .ownerName(card.getOwnerName())
+                .cardLastDigits(card.getCardLastDigits())
+                .discount(card.getDiscount())
+                .build();
+        List<String> dataForFile = generateLinesForFile(cardDto, receiptDto);
+        writeReceiptToFile(creationTime.format(format), dataForFile);
         return receiptDto;
     }
 
@@ -67,21 +78,28 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .count());
     }
 
-    private void writeReceiptToFile(ReceiptDto receiptDto) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
-        String fileName = "Receipts\\Receipt " + LocalDateTime.now().format(format) + ".csv";
+    private void writeReceiptToFile(String creationTime, List<String> dataForFile) {
+        String fileName = "Receipts\\Receipt " + creationTime + ".txt";
         File file = new File(fileName);
-        List<String> dataForFile = generateLinesForFile(receiptDto);
         fileUtil.writeToFile(file, dataForFile);
     }
 
-    private List<String> generateLinesForFile(ReceiptDto receiptDto) {
+    private List<String> generateLinesForFile(CardDto cardDto, ReceiptDto receiptDto) {
         List<String> lines = new ArrayList<>();
-        lines.add("QTY;DESCRIPTION;PRICE;TOTAL\n");
-        List<ProductDto> productsDto = receiptDto.getProducts();
-        for (ProductDto product : productsDto) {
+        lines.add("CASH RECEIPT\n");
+        lines.add("DATE: " + receiptDto.getPayDate() + "\n");
+        lines.add("TIME: " + receiptDto.getPayTime() + "\n");
+        lines.add("\n");
+        lines.add("QTY DESCRIPTION PRICE TOTAL\n");
+        List<ProductDto> products = receiptDto.getProducts();
+        for (ProductDto product : products) {
             lines.add(product.toString() + "\n");
         }
+        lines.add("\n");
+        lines.add(cardDto.toString() + "\n");
+        lines.add("TAXABLE TOT. - " + receiptDto.getTaxableTotal() + "\n");
+        lines.add("VAT17% - " + receiptDto.getVatAmount() + "\n");
+        lines.add("TOTAL - " + receiptDto.getTotalForPayment() + "\n");
         return lines;
     }
 }
