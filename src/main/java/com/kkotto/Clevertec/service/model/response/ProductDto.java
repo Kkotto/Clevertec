@@ -13,6 +13,7 @@ public class ProductDto {
     private String name;
     private BigDecimal price;
     private BigDecimal totalPrice;
+    private boolean isDiscount;
 
     public String toString() {
         return String.format("%d %s $%f $%f", quantity, name, price, totalPrice);
@@ -37,6 +38,11 @@ public class ProductDto {
 
         public Builder price(BigDecimal price) {
             product.price = price;
+            return this;
+        }
+
+        public Builder isDiscount(boolean isDiscount) {
+            product.isDiscount = isDiscount;
             return this;
         }
 
