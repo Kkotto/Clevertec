@@ -20,7 +20,7 @@ public class ProductController {
     //4. чтение товаров из файла
 
     @PostMapping("/create")
-    public ProductDto createProduct(@RequestBody ProductDto productDto){
+    public ProductDto createProduct(@RequestBody ProductDto productDto) {
         return productService.createProduct(productDto);
     }
 }

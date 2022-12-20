@@ -13,7 +13,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public ProductDto createProduct(ProductDto productDto){
+    public ProductDto createProduct(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());

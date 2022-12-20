@@ -14,7 +14,7 @@ public class FileUtil {
 
     private FileUtil() {
         File receiptsDirectory = new File("Receipts");
-        if(!receiptsDirectory.exists()){
+        if (!receiptsDirectory.exists()) {
             receiptsDirectory.mkdirs();
         }
     }
