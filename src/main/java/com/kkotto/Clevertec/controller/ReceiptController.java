@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReceiptController {
     private final ReceiptService receiptService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ReceiptDto createReceipt(@RequestBody PaymentDto paymentDto) {
         return receiptService.createReceipt(paymentDto);
     }

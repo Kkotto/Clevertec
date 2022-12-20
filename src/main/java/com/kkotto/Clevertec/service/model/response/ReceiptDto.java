@@ -13,8 +13,6 @@ import java.util.List;
 @Setter
 @Builder
 public class ReceiptDto {
-    private BigDecimal shopId;
-    private Integer cashierId;
     private List<ProductDto> products;
     private LocalDate payDate;
     private LocalTime payTime;
