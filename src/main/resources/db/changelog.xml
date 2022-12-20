@@ -19,7 +19,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="owner_name" type="varchar"/>
-            <column name="discount" type="integer"/>
+            <column name="discount" type="double"/>
             <column name="card_last_digits" type="integer"/>
             <column name="create_at" type="timestamp"/>
         </createTable>

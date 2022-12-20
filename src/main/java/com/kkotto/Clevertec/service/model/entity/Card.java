@@ -14,7 +14,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String ownerName;
-    private Integer discount;
+    private double discount;
     private Integer cardLastDigits;
     private LocalDateTime createAt;
 

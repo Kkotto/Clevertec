@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
     private final CardService cardService;
 
-    @PostMapping("/create")
+    @PostMapping
     public CardDto createReceipt(@RequestBody CardDto cardDto) {
         return cardService.createCard(cardDto);
     }

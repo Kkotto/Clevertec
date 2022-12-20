@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class CardDto {
     private String ownerName;
-    private Integer discount;
+    private double discount;
     private Integer cardLastDigits;
 
     public String toString() {
