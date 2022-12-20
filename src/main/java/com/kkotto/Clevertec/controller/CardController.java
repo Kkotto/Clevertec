@@ -15,7 +15,7 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping
-    public CardDto createReceipt(@RequestBody CardDto cardDto) {
+    public CardDto createCard(@RequestBody CardDto cardDto) {
         return cardService.createCard(cardDto);
     }
 }
