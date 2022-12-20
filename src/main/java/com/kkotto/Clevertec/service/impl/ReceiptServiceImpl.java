@@ -7,19 +7,26 @@ import com.kkotto.Clevertec.service.model.request.PaymentDto;
 import com.kkotto.Clevertec.service.model.request.ProductPaymentDto;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
 import com.kkotto.Clevertec.service.model.response.ReceiptDto;
+import com.kkotto.Clevertec.service.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReceiptServiceImpl implements ReceiptService {
     private final ProductRepository productRepository;
+    private final FileUtil fileUtil = FileUtil.getInstance();
+
     @Transactional
     @Override
     public ReceiptDto createReceipt(PaymentDto paymentDto) {
@@ -30,7 +37,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         BigDecimal taxableTotal = countTaxableTotal(productsDto);
         double vatValue = 0.17;
         BigDecimal vatAmount = taxableTotal.multiply(BigDecimal.valueOf(vatValue));
-        return ReceiptDto.builder()
+        ReceiptDto receiptDto = ReceiptDto.builder()
                 .payDate(LocalDate.now())
                 .payTime(LocalTime.now())
                 .shopId(paymentDto.getShopId())
@@ -40,6 +47,8 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .vatAmount(vatAmount)
                 .totalForPayment(vatAmount.add(taxableTotal))
                 .build();
+        writeReceiptToFile(receiptDto);
+        return receiptDto;
     }
 
     private ProductDto convertToItemDto(ProductPaymentDto productPaymentDto) {
@@ -52,9 +61,27 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .build();
     }
 
-    private BigDecimal countTaxableTotal(List<ProductDto> productDto){
+    private BigDecimal countTaxableTotal(List<ProductDto> productDto) {
         return BigDecimal.valueOf(productDto.stream()
                 .map(ProductDto::getTotalPrice)
                 .count());
+    }
+
+    private void writeReceiptToFile(ReceiptDto receiptDto) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
+        String fileName = "Receipts\\Receipt " + LocalDateTime.now().format(format) + ".csv";
+        File file = new File(fileName);
+        List<String> dataForFile = generateLinesForFile(receiptDto);
+        fileUtil.writeToFile(file, dataForFile);
+    }
+
+    private List<String> generateLinesForFile(ReceiptDto receiptDto) {
+        List<String> lines = new ArrayList<>();
+        lines.add("QTY;DESCRIPTION;PRICE;TOTAL");
+        List<ProductDto> productsDto = receiptDto.getProducts();
+        for (ProductDto product : productsDto) {
+            lines.add(product.toString());
+        }
+        return lines;
     }
 }

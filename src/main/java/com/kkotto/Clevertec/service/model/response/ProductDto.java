@@ -14,6 +14,10 @@ public class ProductDto {
     private BigDecimal price;
     private BigDecimal totalPrice;
 
+    public String toString() {
+        return String.format("%d;%s;$%.2f;$%.2f", quantity, name, price, totalPrice);
+    }
+
     public static class Builder {
         private ProductDto product;
 
