@@ -12,10 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class CashReceiptDto {
+public class ReceiptDto {
     private BigDecimal shopId;
     private Integer cashierId;
-    private List<ItemDto> items;
+    private List<ProductDto> products;
     private LocalDate payDate;
     private LocalTime payTime;
     private BigDecimal taxableTotal;

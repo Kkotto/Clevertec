@@ -8,10 +8,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PayDto {
+public class PaymentDto {
     private BigDecimal shopId;
     private Integer cashierId;
-    private List<ItemPayDto> items;
+    private List<ProductPaymentDto> products;
     private Integer cardNumber;
 
 }
