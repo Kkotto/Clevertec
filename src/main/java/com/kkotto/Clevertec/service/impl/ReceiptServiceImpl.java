@@ -77,10 +77,10 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     private List<String> generateLinesForFile(ReceiptDto receiptDto) {
         List<String> lines = new ArrayList<>();
-        lines.add("QTY;DESCRIPTION;PRICE;TOTAL");
+        lines.add("QTY;DESCRIPTION;PRICE;TOTAL\n");
         List<ProductDto> productsDto = receiptDto.getProducts();
         for (ProductDto product : productsDto) {
-            lines.add(product.toString());
+            lines.add(product.toString() + "\n");
         }
         return lines;
     }

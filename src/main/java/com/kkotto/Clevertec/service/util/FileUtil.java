@@ -13,6 +13,10 @@ public class FileUtil {
     static final Logger logger = LogManager.getLogger(FileUtil.class);
 
     private FileUtil() {
+        File receiptsDirectory = new File("Receipts");
+        if(!receiptsDirectory.exists()){
+            receiptsDirectory.mkdirs();
+        }
     }
 
     public static FileUtil getInstance() {
