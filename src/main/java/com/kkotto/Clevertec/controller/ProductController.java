@@ -3,6 +3,7 @@ package com.kkotto.Clevertec.controller;
 import com.kkotto.Clevertec.service.ProductService;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
     private final ProductService productService;
     @PostMapping
-    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+    public ProductDto createProduct(@RequestBody @Validated ProductDto productDto) {
         return productService.createProduct(productDto);
     }
 

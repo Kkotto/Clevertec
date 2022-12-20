@@ -1,7 +1,9 @@
 package com.kkotto.Clevertec.service.model.response;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 @Getter
@@ -9,8 +11,11 @@ public class ProductDto {
     private ProductDto() {
     }
 
+    @Min(1)
     private Integer quantity;
+    @NotNull
     private String name;
+    @Min(0)
     private BigDecimal price;
     private BigDecimal totalPrice;
     private boolean isDiscount;
