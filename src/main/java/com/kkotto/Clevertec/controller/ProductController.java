@@ -1,8 +1,6 @@
 package com.kkotto.Clevertec.controller;
 
 import com.kkotto.Clevertec.service.ProductService;
-import com.kkotto.Clevertec.service.model.request.PaymentDto;
-import com.kkotto.Clevertec.service.model.response.ReceiptDto;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +18,6 @@ public class ProductController {
     //2. вывод чека в файл
     //3. сохранение товаров в файл
     //4. чтение товаров из файла
-    @PostMapping("/create-receipt")
-    public ReceiptDto createReceipt(@RequestBody PaymentDto paymentDto) {
-        return productService.createReceipt(paymentDto);
-    }
 
     @PostMapping("/create")
     public ProductDto createProduct(@RequestBody ProductDto productDto){
