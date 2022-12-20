@@ -3,9 +3,7 @@ package com.kkotto.Clevertec.service.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Card {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String ownerName;
     private Integer discount;
