@@ -1,0 +1,10 @@
+server:
+  port: 5869
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shop-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db/changelog.xml

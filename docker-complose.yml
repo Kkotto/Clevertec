@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  postgres_auth:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "shop-db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ./data:/var/lib/postgresql/shop-db
+    ports:
+      - "5432:5432"
