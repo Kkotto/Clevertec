@@ -74,14 +74,25 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public File getProductList() {
         List<Product> productList = productRepository.findAll();
+        List<String> productLines = generateLinesForProductListFile(productList);
+        String fileName = String.format(Constants.PRODUCT_LIST_FORMAT_FILENAME, dateTimeUtil.getFormattedCurrentDateTime());
+        File file = new File(fileName);
+        fileUtil.writeToFile(file, productLines);
+        return file;
+    }
+
+    private List<String> generateLinesForProductListFile(List<Product> productList){
         List<String> productLines = new ArrayList<>();
         productLines.add(Constants.PRODUCT_LIST_FORMAT_HEADER);
         for (Product product : productList) {
-            productLines.add(String.format(Constants.PRODUCT_LIST_FORMAT_TEMPLATE, product.getId(), product.getName(), product.getPrice(), dateTimeUtil.formatDateTime(product.getCreateAt())));
+            String line = String.format(Constants.PRODUCT_LIST_FORMAT_TEMPLATE,
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    dateTimeUtil.formatDateTime(product.getCreateAt()));
+            productLines.add(line);
         }
-        File file = new File(String.format(Constants.PRODUCT_LIST_FORMAT_FILENAME, dateTimeUtil.getFormattedCurrentDateTime()));
-        fileUtil.writeToFile(file, productLines);
-        return file;
+        return productLines;
     }
 
     @Override
