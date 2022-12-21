@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/card")
@@ -16,7 +18,7 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping
-    public ResponseEntity<String> createCard(@RequestBody CardDto cardDto) {
+    public ResponseEntity<String> createCard(@RequestBody @Valid CardDto cardDto) {
         return cardService.createCard(cardDto);
     }
 }

@@ -1,7 +1,7 @@
 package com.kkotto.Clevertec.service.util.consts;
 
 public class ConstantsResponses {
-    public static final String CARD_IS_NULL_RESPONSE = "Invalid: card has invalid data.";
-    public static final String CARD_IS_SAVED_RESPONSE = "Success: Card was successfully saved.";
-    public static final String CARD_ALREADY_EXISTS_RESPONSE = "Error: such card already exists.";
+    public static final String INVALID_DATA_RESPONSE = "Invalid: entity has invalid data.";
+    public static final String SUCCESSFULLY_SAVED_RESPONSE = "Success: entity was successfully saved.";
+    public static final String ENTITY_ALREADY_EXISTS_RESPONSE = "Error: such entity already exists.";
 }
