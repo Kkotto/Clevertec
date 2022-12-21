@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import com.kkotto.Clevertec.service.util.consts.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,10 +14,6 @@ public class FileUtil {
     static final Logger logger = LogManager.getLogger(FileUtil.class);
 
     private FileUtil() {
-        File receiptsDirectory = new File("Receipts");
-        if (!receiptsDirectory.exists()) {
-            receiptsDirectory.mkdirs();
-        }
     }
 
     public static FileUtil getInstance() {
@@ -40,6 +37,17 @@ public class FileUtil {
     }
 
     public File createFile(String filePath) {
+        String path;
+        if (filePath.contains(Constants.DIRECTORY_REGEX)) {
+            path = filePath.substring(0, filePath.lastIndexOf(Constants.DIRECTORY_REGEX));
+        } else {
+            path = filePath;
+        }
+        if (path.contains(Constants.DIRECTORY_REGEX)) {
+            createPathDirectories(path);
+        } else {
+            createDirectory(path);
+        }
         File file = new File(filePath);
         try {
             if (file.createNewFile()) {
@@ -52,5 +60,25 @@ public class FileUtil {
             logger.error("Impossible to create file " + file.getName());
         }
         return file;
+    }
+
+    public void createPathDirectories(String filePath) {
+        String[] directories = filePath.split(Constants.DIRECTORY_REGEX);
+        StringBuilder currentPath = new StringBuilder();
+        for (String directory : directories) {
+            currentPath.append(directory);
+            createDirectory(currentPath.toString());
+        }
+    }
+
+    public void createDirectory(String directoryPath) {
+        File currentDirectory = new File(directoryPath);
+        if (!currentDirectory.exists()) {
+            currentDirectory.mkdirs();
+        }
+    }
+
+    public boolean isFileCSV(String fileName) {
+        return fileName.matches(Constants.CSV_FILENAME_REGEX);
     }
 }

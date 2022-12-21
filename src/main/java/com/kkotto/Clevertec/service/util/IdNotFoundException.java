@@ -1,7 +1,7 @@
 package com.kkotto.Clevertec.service.util;
 
-public class IdNotFoundException extends RuntimeException{
-    public IdNotFoundException(){
-        super("Объект с таким id не найден");
+public class IdNotFoundException extends RuntimeException {
+    public IdNotFoundException() {
+        super("Entity with such id is not found.");
     }
 }

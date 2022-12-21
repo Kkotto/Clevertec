@@ -3,6 +3,7 @@ package com.kkotto.Clevertec.service.impl;
 import com.kkotto.Clevertec.repository.CardRepository;
 import com.kkotto.Clevertec.service.model.entity.Card;
 import com.kkotto.Clevertec.service.model.response.CardDto;
+import com.kkotto.Clevertec.service.util.consts.ConstantsResponses;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +35,7 @@ class CardServiceImplTest {
         card.setCardLastDigits(cardDtoTest.getCardLastDigits());
         card.setDiscount(cardDtoTest.getDiscount());
         Mockito.when(cardRepository.save(Mockito.any(Card.class))).thenReturn(card);
-        CardDto cardDto = cardService.createCard(cardDtoTest);
-        Assertions.assertEquals(cardDtoTest.getCardLastDigits(), cardDto.getCardLastDigits());
+        ResponseEntity<String> cardDto = cardService.createCard(cardDtoTest);
+        Assertions.assertEquals(cardDto, new ResponseEntity<>(ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE));
     }
 }
