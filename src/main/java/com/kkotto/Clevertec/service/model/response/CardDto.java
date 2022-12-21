@@ -12,13 +12,15 @@ import javax.validation.constraints.Min;
 @Setter
 @Builder
 public class CardDto {
+    @NotNull
     private String ownerName;
     @Min(0)
     @Max(1)
-    private double discount;
     @NotNull
+    private double discount;
     @Min(1000)
     @Max(9999)
+    @NotNull
     private Integer cardLastDigits;
 
     public String toString() {

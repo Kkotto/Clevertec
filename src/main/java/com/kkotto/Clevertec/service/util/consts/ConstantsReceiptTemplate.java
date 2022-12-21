@@ -1,4 +1,4 @@
-package com.kkotto.Clevertec.service.util;
+package com.kkotto.Clevertec.service.util.consts;
 
 public class ConstantsReceiptTemplate {
     public static final String CASH_RECEIPT_LINE = "CASH RECEIPT\n";

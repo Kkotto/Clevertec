@@ -1,4 +1,4 @@
-package com.kkotto.Clevertec.service.util;
+package com.kkotto.Clevertec.service.util.consts;
 
 import java.time.format.DateTimeFormatter;
 
@@ -18,4 +18,6 @@ public class Constants {
     public static final String PRODUCT_PARAMS_SEPARATOR_REGEX = ";";
     public static final String DIRECTORY_REGEX = "\\";
     public static final String EMPTY_LINE = "\n";
+    public static final double DISCOUNT_MIN_VALUE = 0;
+    public static final double DISCOUNT_MAX_VALUE = 1;
 }

@@ -4,7 +4,7 @@ import com.kkotto.Clevertec.repository.ProductRepository;
 import com.kkotto.Clevertec.service.ProductService;
 import com.kkotto.Clevertec.service.model.entity.Product;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
-import com.kkotto.Clevertec.service.util.Constants;
+import com.kkotto.Clevertec.service.util.consts.Constants;
 import com.kkotto.Clevertec.service.util.FileUtil;
 import com.kkotto.Clevertec.service.util.IdNotFoundException;
 import com.kkotto.Clevertec.service.util.DateTimeUtil;
@@ -16,10 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
