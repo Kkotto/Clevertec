@@ -12,6 +12,7 @@ import com.kkotto.Clevertec.service.model.response.ProductDto;
 import com.kkotto.Clevertec.service.model.response.ReceiptDto;
 import com.kkotto.Clevertec.service.util.Constants;
 import com.kkotto.Clevertec.service.util.FileUtil;
+import com.kkotto.Clevertec.service.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,19 +29,20 @@ public class ReceiptServiceImpl implements ReceiptService {
     private final ProductRepository productRepository;
     private final CardRepository cardRepository;
     private final FileUtil fileUtil = FileUtil.getInstance();
+    private final DateTimeUtil dateTimeUtil = DateTimeUtil.getInstance();
 
     @Transactional
     @Override
     public ReceiptDto createReceipt(PaymentDto paymentDto) {
-        LocalDateTime creationTime = LocalDateTime.now();
-        CardDto cardDto = generateCard(paymentDto);
-        ReceiptDto receiptDto = generateReceipt(paymentDto, creationTime, cardDto.getDiscount());
+        LocalDateTime creationTime = dateTimeUtil.getCurrentDateTime();
+        CardDto cardDto = getCardDto(paymentDto);
+        ReceiptDto receiptDto = createReceiptDto(paymentDto, creationTime, cardDto.getDiscount());
         List<String> dataForFile = generateLinesForFile(cardDto, receiptDto);
-        writeReceiptToFile(creationTime.format(Constants.DATE_TIME_FORMATTER), dataForFile);
+        writeReceiptToFile(dateTimeUtil.formatDateTime(creationTime), dataForFile);
         return receiptDto;
     }
 
-    private ReceiptDto generateReceipt(PaymentDto paymentDto, LocalDateTime creationTime, double cardDiscount) {
+    private ReceiptDto createReceiptDto(PaymentDto paymentDto, LocalDateTime creationTime, double cardDiscount) {
         List<ProductDto> productsDto = getProductDtoList(paymentDto);
         BigDecimal taxableTotal = countTaxableTotal(productsDto);
         taxableTotal = taxableTotal.multiply(BigDecimal.valueOf(cardDiscount));
@@ -55,7 +57,7 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .build();
     }
 
-    private CardDto generateCard(PaymentDto paymentDto) {
+    private CardDto getCardDto(PaymentDto paymentDto) {
         Card card = cardRepository.findCardByCardLastDigits(paymentDto.getCardNumber());
         return CardDto.builder()
                 .ownerName(card.getOwnerName())
