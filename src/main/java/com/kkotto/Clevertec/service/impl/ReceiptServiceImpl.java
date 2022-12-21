@@ -118,10 +118,10 @@ public class ReceiptServiceImpl implements ReceiptService {
         List<ProductDto> products = receiptDto.getProducts();
         for (ProductDto product : products) {
             lines.add(product.toString());
-            lines.add(ConstantsReceiptTemplate.EMPTY_LINE);
+            lines.add(Constants.EMPTY_LINE);
             if (product.isDiscount()) {
                 lines.add(String.format(ConstantsReceiptTemplate.DISCOUNT_FORMAT_LINE, Constants.DISCOUNT_VALUE * Constants.DISCOUNT_PERCENT_COEFFICIENT));
-                lines.add(ConstantsReceiptTemplate.EMPTY_LINE);
+                lines.add(Constants.EMPTY_LINE);
             }
         }
         lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);

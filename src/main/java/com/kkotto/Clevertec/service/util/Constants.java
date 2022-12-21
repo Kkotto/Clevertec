@@ -14,5 +14,8 @@ public class Constants {
     public static final String PRODUCT_LIST_FORMAT_FILENAME = "Products\\Products-%s.csv";
     public static final String PRODUCT_LIST_FORMAT_HEADER = "id;name;price;createAt\n";
     public static final String PRODUCT_LIST_FORMAT_TEMPLATE = "%d;%s;%.2f;%s\n";
+    public static final String PRODUCT_LIST_REGEX_TEMPLATE = "^\\d+;.*?;\\d+,\\d{2};\\d{2}-\\d{2}-\\d{4} \\d{2}-\\d{2}-\\d{2}";
+    public static final String PRODUCT_PARAMS_SEPARATOR_REGEX = ";";
     public static final String DIRECTORY_REGEX = "\\";
+    public static final String EMPTY_LINE = "\n";
 }

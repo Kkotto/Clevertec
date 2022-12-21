@@ -36,4 +36,8 @@ public class DateTimeUtil {
     public String getFormattedCurrentDateTime() {
         return LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER);
     }
+
+    public LocalDateTime convertToDateTime(String dateTime) {
+        return LocalDateTime.parse(dateTime, Constants.DATE_TIME_FORMATTER);
+    }
 }
