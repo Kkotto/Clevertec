@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
@@ -24,6 +27,11 @@ public class ProductController {
     @PutMapping
     public ProductDto updateProduct(@RequestBody ProductDto productDto, @RequestParam Integer productId){
         return productService.updateProduct(productDto, productId);
+    }
+
+    @PostMapping("/get-product-list")
+    public File getProductList() throws IOException {
+        return productService.getProductList();
     }
 
 }
