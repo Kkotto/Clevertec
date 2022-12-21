@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @PutMapping
-    public ProductDto updateProduct(@RequestBody ProductDto productDto, @RequestParam Integer productId) {
+    public ResponseEntity<String> updateProduct(@RequestBody ProductDto productDto, @RequestParam Integer productId) {
         return productService.updateProduct(productDto, productId);
     }
 

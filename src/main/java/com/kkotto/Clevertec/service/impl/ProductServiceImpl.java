@@ -56,7 +56,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto, Integer productId) {
+    public ResponseEntity<String> updateProduct(ProductDto productDto, Integer productId) {
+        if (!isProductExists(productId)) {
+            return new ResponseEntity<>(ConstantsResponses.ENTITY_DOES_NOT_EXIST_RESPONSE_MSG, ConstantsResponses.ENTITY_DOES_NOT_EXIST_RESPONSE);
+        }
         Product product = productRepository.findById(productId).orElseThrow(IdNotFoundException::new);
         if (productDto.getName() != null) {
             product.setName(productDto.getName());
@@ -64,15 +67,8 @@ public class ProductServiceImpl implements ProductService {
         if (productDto.getPrice() != null) {
             product.setPrice(productDto.getPrice());
         }
-        Product save = productRepository.save(product);
-        return convertToProductDto(save);
-    }
-
-    private ProductDto convertToProductDto(Product product) {
-        return new ProductDto.Builder()
-                .name(product.getName())
-                .price(product.getPrice())
-                .build();
+        productRepository.save(product);
+        return new ResponseEntity<>(ConstantsResponses.ENTITY_SUCCESSFULLY_UPDATED_RESPONSE_MSG, ConstantsResponses.ENTITY_SUCCESSFULLY_UPDATED_RESPONSE);
     }
 
     @Override

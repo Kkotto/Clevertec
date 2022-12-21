@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
     ResponseEntity<String> createProduct(ProductDto productDto);
     ResponseEntity<String> deleteProduct(Integer productId);
-    ProductDto updateProduct(ProductDto productDto, Integer productId);
+    ResponseEntity<String> updateProduct(ProductDto productDto, Integer productId);
     File getProductList();
     List<Product> readProductList(MultipartFile file);
 }
