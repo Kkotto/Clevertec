@@ -11,6 +11,7 @@ import com.kkotto.Clevertec.service.model.response.CardDto;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
 import com.kkotto.Clevertec.service.model.response.ReceiptDto;
 import com.kkotto.Clevertec.service.util.Constants;
+import com.kkotto.Clevertec.service.util.ConstantsReceiptTemplate;
 import com.kkotto.Clevertec.service.util.FileUtil;
 import com.kkotto.Clevertec.service.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class ReceiptServiceImpl implements ReceiptService {
     private ReceiptDto createReceiptDto(PaymentDto paymentDto, LocalDateTime creationTime, double cardDiscount) {
         List<ProductDto> productsDto = getProductDtoList(paymentDto);
         BigDecimal taxableTotal = countTaxableTotal(productsDto);
-        taxableTotal = taxableTotal.multiply(BigDecimal.valueOf(cardDiscount));
+        taxableTotal = taxableTotal.multiply(BigDecimal.valueOf(Constants.FULL_PRICE_VALUE - cardDiscount));
         BigDecimal vatAmount = taxableTotal.multiply(BigDecimal.valueOf(Constants.VAT_VALUE));
         return ReceiptDto.builder()
                 .payDate(creationTime.toLocalDate())
@@ -109,30 +110,26 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     private List<String> generateLinesForFile(CardDto cardDto, ReceiptDto receiptDto) {
         List<String> lines = new ArrayList<>();
-        lines.add("CASH RECEIPT\n");
-        lines.add("DATE: " + receiptDto.getPayDate() + "\n");
-        lines.add("TIME: " + receiptDto.getPayTime() + "\n");
-        lines.add("\n");
-        lines.add("---------------");
-        lines.add("\n");
-        lines.add("QTY DESCRIPTION PRICE TOTAL\n");
+        lines.add(ConstantsReceiptTemplate.CASH_RECEIPT_LINE);
+        lines.add(String.format(ConstantsReceiptTemplate.DATE_FORMAT_LINE, dateTimeUtil.formatDate(receiptDto.getPayDate())));
+        lines.add(String.format(ConstantsReceiptTemplate.TIME_FORMAT_LINE, dateTimeUtil.formatTime(receiptDto.getPayTime())));
+        lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);
+        lines.add(ConstantsReceiptTemplate.HEADER_LINE);
         List<ProductDto> products = receiptDto.getProducts();
         for (ProductDto product : products) {
-            lines.add(product.toString() + "\n");
+            lines.add(product.toString());
+            lines.add(ConstantsReceiptTemplate.EMPTY_LINE);
             if (product.isDiscount()) {
-                lines.add("Discount: " + Constants.DISCOUNT_VALUE + "\n");
+                lines.add(String.format(ConstantsReceiptTemplate.DISCOUNT_FORMAT_LINE, Constants.DISCOUNT_VALUE * Constants.DISCOUNT_PERCENT_COEFFICIENT));
+                lines.add(ConstantsReceiptTemplate.EMPTY_LINE);
             }
-            lines.add("\n");
         }
-        lines.add("---------------");
-        lines.add("\n");
+        lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);
         lines.add(cardDto.toString() + "\n");
-        lines.add("\n");
-        lines.add("---------------");
-        lines.add("\n");
-        lines.add("TAXABLE TOT. - " + receiptDto.getTaxableTotal() + "\n");
-        lines.add("VAT17% - " + receiptDto.getVatAmount() + "\n");
-        lines.add("TOTAL - " + receiptDto.getTotalForPayment() + "\n");
+        lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);
+        lines.add(String.format(ConstantsReceiptTemplate.TAXABLE_FORMAT_LINE, receiptDto.getTaxableTotal()));
+        lines.add(String.format(ConstantsReceiptTemplate.VAT_FORMAT_LINE, Constants.VAT_VALUE * Constants.DISCOUNT_PERCENT_COEFFICIENT, receiptDto.getVatAmount()));
+        lines.add(String.format(ConstantsReceiptTemplate.TOTAL_FORMAT_LINE, receiptDto.getTotalForPayment()));
         return lines;
     }
 }

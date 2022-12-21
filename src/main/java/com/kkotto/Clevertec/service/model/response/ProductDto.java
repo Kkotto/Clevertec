@@ -21,7 +21,7 @@ public class ProductDto {
     private boolean isDiscount;
 
     public String toString() {
-        return String.format("%d %s $%f $%f", quantity, name, price, totalPrice);
+        return String.format("%d %s $%.2f $%.2f", quantity, name, price, totalPrice);
     }
 
     public static class Builder {
