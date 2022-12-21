@@ -9,4 +9,10 @@ public class ConstantsResponses {
     public static final HttpStatus SUCCESSFULLY_SAVED_RESPONSE = HttpStatus.OK;
     public static final String ENTITY_ALREADY_EXISTS_RESPONSE_MSG = "Error: such entity already exists.";
     public static final HttpStatus ENTITY_ALREADY_EXISTS_RESPONSE = HttpStatus.BAD_REQUEST;
+    public static final String ENTITY_DOES_NOT_EXIST_RESPONSE_MSG = "Error: such entity does not exist.";
+    public static final HttpStatus ENTITY_DOES_NOT_EXIST_RESPONSE = HttpStatus.BAD_REQUEST;
+    public static final String ENTITY_SUCCESSFULLY_UPDATED_RESPONSE_MSG = "Success: entity was successfully updated.";
+    public static final HttpStatus ENTITY_SUCCESSFULLY_UPDATED_RESPONSE = HttpStatus.OK;
+    public static final String ENTITY_SUCCESSFULLY_DELETED_RESPONSE_MSG = "Success: entity was successfully deleted.";
+    public static final HttpStatus ENTITY_SUCCESSFULLY_DELETED_RESPONSE = HttpStatus.OK;
 }

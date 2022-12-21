@@ -42,8 +42,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
-        productRepository.deleteById(productId);
+    public ResponseEntity<String> deleteProduct(Integer productId) {
+        if (!isProductExists(productId)) {
+            return new ResponseEntity<>(ConstantsResponses.ENTITY_DOES_NOT_EXIST_RESPONSE_MSG, ConstantsResponses.ENTITY_DOES_NOT_EXIST_RESPONSE);
+        } else {
+            productRepository.deleteById(productId);
+            return new ResponseEntity<>(ConstantsResponses.ENTITY_SUCCESSFULLY_DELETED_RESPONSE_MSG, ConstantsResponses.ENTITY_SUCCESSFULLY_DELETED_RESPONSE);
+        }
+    }
+
+    private boolean isProductExists(Integer productId) {
+        return productRepository.findById(productId).isPresent();
     }
 
     @Override

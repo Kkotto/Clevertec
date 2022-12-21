@@ -24,8 +24,8 @@ public class ProductController {
     }
 
     @DeleteMapping
-    public void deleteProduct(@RequestParam Integer productId) {
-        productService.deleteProduct(productId);
+    public ResponseEntity<String> deleteProduct(@RequestParam Integer productId) {
+        return productService.deleteProduct(productId);
     }
 
     @PutMapping
