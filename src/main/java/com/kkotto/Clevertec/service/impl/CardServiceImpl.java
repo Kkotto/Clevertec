@@ -6,7 +6,6 @@ import com.kkotto.Clevertec.service.model.entity.Card;
 import com.kkotto.Clevertec.service.model.response.CardDto;
 import com.kkotto.Clevertec.service.util.consts.ConstantsResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,12 @@ public class CardServiceImpl implements CardService {
     @Override
     public ResponseEntity<String> createCard(CardDto cardDto) {
         if (cardDto == null || cardDto.getCardLastDigits() == null) {
-            return new ResponseEntity<>(ConstantsResponses.INVALID_DATA_RESPONSE, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ConstantsResponses.INVALID_DATA_RESPONSE_MSG, ConstantsResponses.INVALID_DATA_RESPONSE);
         }
         if (isCardSaved(cardDto)) {
-            return new ResponseEntity<>(ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE, HttpStatus.OK);
+            return new ResponseEntity<>(ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE_MSG, ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE);
         } else {
-            return new ResponseEntity<>(ConstantsResponses.ENTITY_ALREADY_EXISTS_RESPONSE, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ConstantsResponses.ENTITY_ALREADY_EXISTS_RESPONSE_MSG, ConstantsResponses.ENTITY_ALREADY_EXISTS_RESPONSE);
         }
     }
 
