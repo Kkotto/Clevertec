@@ -18,6 +18,10 @@ public class Constants {
     public static final String PRODUCT_PARAMS_SEPARATOR_REGEX = ";";
     public static final String DIRECTORY_REGEX = "\\";
     public static final String EMPTY_LINE = "\n";
-    public static final double DISCOUNT_MIN_VALUE = 0;
-    public static final double DISCOUNT_MAX_VALUE = 1;
+    public static final String CSV_FILENAME_REGEX = "^.*\\.csv$";
+    public static final int PARAM_NUMBER_PRODUCT_NAME_FOR_READING_FILE = 1;
+    public static final int PARAM_NUMBER_PRODUCT_PRICE_FOR_READING_FILE = 2;
+    public static final int PARAM_NUMBER_PRODUCT_CREATE_AT_FOR_READING_FILE = 3;
+    public static final String BIG_DECIMAL_INCORRECT_SEPARATOR = ",";
+    public static final String BIG_DECIMAL_CORRECT_SEPARATOR = ".";
 }

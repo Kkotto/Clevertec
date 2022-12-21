@@ -15,4 +15,6 @@ public class ConstantsResponses {
     public static final HttpStatus ENTITY_SUCCESSFULLY_UPDATED_RESPONSE = HttpStatus.OK;
     public static final String ENTITY_SUCCESSFULLY_DELETED_RESPONSE_MSG = "Success: entity was successfully deleted.";
     public static final HttpStatus ENTITY_SUCCESSFULLY_DELETED_RESPONSE = HttpStatus.OK;
+    public static final String WRONG_FILE_EXTENSION_RESPONSE_MSG = "Please, use .csv file";
+    public static final HttpStatus WRONG_FILE_EXTENSION_RESPONSE = HttpStatus.BAD_REQUEST;
 }

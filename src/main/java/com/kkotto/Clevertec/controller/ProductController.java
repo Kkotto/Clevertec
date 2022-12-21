@@ -1,8 +1,9 @@
 package com.kkotto.Clevertec.controller;
 
 import com.kkotto.Clevertec.service.ProductService;
-import com.kkotto.Clevertec.service.model.entity.Product;
 import com.kkotto.Clevertec.service.model.response.ProductDto;
+import com.kkotto.Clevertec.service.util.FileUtil;
+import com.kkotto.Clevertec.service.util.consts.ConstantsResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
 public class ProductController {
     private final ProductService productService;
+    private final FileUtil fileUtil = FileUtil.getInstance();
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody @Validated ProductDto productDto) {
@@ -39,7 +40,10 @@ public class ProductController {
     }
 
     @PostMapping("/read-product-list")
-    public List<Product> readProductList(@RequestPart MultipartFile file) {
+    public ResponseEntity<String> readProductList(@RequestPart MultipartFile file) {
+        if (!fileUtil.isFileCSV(file.getOriginalFilename())) {
+            return new ResponseEntity<>(ConstantsResponses.WRONG_FILE_EXTENSION_RESPONSE_MSG, ConstantsResponses.WRONG_FILE_EXTENSION_RESPONSE);
+        }
         return productService.readProductList(file);
     }
 }

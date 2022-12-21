@@ -77,4 +77,8 @@ public class FileUtil {
             currentDirectory.mkdirs();
         }
     }
+
+    public boolean isFileCSV(String fileName) {
+        return fileName.matches(Constants.CSV_FILENAME_REGEX);
+    }
 }

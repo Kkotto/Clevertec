@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +36,6 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         productRepository.save(product);
         return new ResponseEntity<>(ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE_MSG, ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE);
-    }
-
-    private Product saveProduct(Product product) {
-        return productRepository.save(product);
     }
 
     @Override
@@ -81,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
         return file;
     }
 
-    private List<String> generateLinesForProductListFile(List<Product> productList){
+    private List<String> generateLinesForProductListFile(List<Product> productList) {
         List<String> productLines = new ArrayList<>();
         productLines.add(Constants.PRODUCT_LIST_FORMAT_HEADER);
         for (Product product : productList) {
@@ -96,33 +93,43 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> readProductList(MultipartFile file) {
-        List<Product> productListToSend = new ArrayList<>();
+    public ResponseEntity<String> readProductList(MultipartFile file) {
+        String[] textLines = convertToStringLines(file);
+        for (String line : textLines) {
+            if (line.matches(Constants.PRODUCT_LIST_REGEX_TEMPLATE)) {
+                String[] params = line.split(Constants.PRODUCT_PARAMS_SEPARATOR_REGEX);
+                String name = params[Constants.PARAM_NUMBER_PRODUCT_NAME_FOR_READING_FILE];
+                BigDecimal price = convertToBigDecimal(params[Constants.PARAM_NUMBER_PRODUCT_PRICE_FOR_READING_FILE]);
+                LocalDateTime createAt = dateTimeUtil.convertToDateTime(params[Constants.PARAM_NUMBER_PRODUCT_CREATE_AT_FOR_READING_FILE]);
+                saveProduct(name, price, createAt);
+            }
+        }
+        return new ResponseEntity<>(ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE_MSG, ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE);
+    }
+
+    private void saveProduct(String name, BigDecimal price, LocalDateTime createAt) {
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+        product.setCreateAt(createAt);
+        productRepository.save(product);
+    }
+
+    private String[] convertToStringLines(MultipartFile file) {
         try {
             byte[] byteText = file.getBytes();
             String text = new String(byteText, StandardCharsets.UTF_8);
-            String[] textLines = text.split(Constants.EMPTY_LINE);
-            List<Product> productList = new ArrayList<>();
-            for (String line : textLines) {
-                if (line.matches(Constants.PRODUCT_LIST_REGEX_TEMPLATE)) {
-                    String[] params = line.split(Constants.PRODUCT_PARAMS_SEPARATOR_REGEX);
-                    Product product = new Product();
-                    product.setName(params[1]);
-                    String price = params[2];
-                    if (price.contains(",")) {
-                        price = price.replace(",", ".");
-                    }
-                    product.setPrice(BigDecimal.valueOf(Double.parseDouble(price)));
-                    product.setCreateAt(dateTimeUtil.convertToDateTime(params[3]));
-                    productList.add(product);
-                }
-            }
-            for (Product product : productList) {
-                productListToSend.add(saveProduct(product));
-            }
+            return text.split(Constants.EMPTY_LINE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return productListToSend;
+    }
+
+    private BigDecimal convertToBigDecimal(String value) {
+        String bigDecimalValue = value;
+        if (bigDecimalValue.contains(Constants.BIG_DECIMAL_INCORRECT_SEPARATOR)) {
+            bigDecimalValue = bigDecimalValue.replace(Constants.BIG_DECIMAL_INCORRECT_SEPARATOR, Constants.BIG_DECIMAL_CORRECT_SEPARATOR);
+        }
+        return BigDecimal.valueOf(Double.parseDouble(bigDecimalValue));
     }
 }
