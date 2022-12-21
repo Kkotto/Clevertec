@@ -15,7 +15,7 @@ public class ProductDto {
     private Integer quantity;
     @NotNull
     private String name;
-    @Min(1)
+    @Min(0)
     private BigDecimal price;
     private BigDecimal totalPrice;
     private boolean isDiscount;
