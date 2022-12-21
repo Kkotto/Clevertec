@@ -37,7 +37,11 @@ public class ReceiptServiceImpl implements ReceiptService {
     public ReceiptDto createReceipt(PaymentDto paymentDto) {
         LocalDateTime creationTime = dateTimeUtil.getCurrentDateTime();
         CardDto cardDto = getCardDto(paymentDto);
-        ReceiptDto receiptDto = createReceiptDto(paymentDto, creationTime, cardDto.getDiscount());
+        double cardDiscount = getCardDiscount(cardDto);
+        ReceiptDto receiptDto = createReceiptDto(paymentDto, creationTime, cardDiscount);
+        if (receiptDto == null) {
+            return null;
+        }
         List<String> dataForFile = generateLinesForFile(cardDto, receiptDto);
         writeReceiptToFile(dateTimeUtil.formatDateTime(creationTime), dataForFile);
         return receiptDto;
@@ -45,6 +49,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     private ReceiptDto createReceiptDto(PaymentDto paymentDto, LocalDateTime creationTime, double cardDiscount) {
         List<ProductDto> productsDto = getProductDtoList(paymentDto);
+        if (productsDto == null) {
+            return null;
+        }
         BigDecimal taxableTotal = countTaxableTotal(productsDto);
         taxableTotal = taxableTotal.multiply(BigDecimal.valueOf(Constants.FULL_PRICE_VALUE - cardDiscount));
         BigDecimal vatAmount = taxableTotal.multiply(BigDecimal.valueOf(Constants.VAT_VALUE));
@@ -58,8 +65,21 @@ public class ReceiptServiceImpl implements ReceiptService {
                 .build();
     }
 
+    private double getCardDiscount(CardDto cardDto) {
+        if (cardDto == null) {
+            return Constants.NO_DISCOUNT_VALUE;
+        }
+        return cardDto.getDiscount();
+    }
+
     private CardDto getCardDto(PaymentDto paymentDto) {
+        if (paymentDto.getCardNumber() == null) {
+            return null;
+        }
         Card card = cardRepository.findCardByCardLastDigits(paymentDto.getCardNumber());
+        if (card == null) {
+            return null;
+        }
         return CardDto.builder()
                 .ownerName(card.getOwnerName())
                 .cardLastDigits(card.getCardLastDigits())
@@ -68,21 +88,32 @@ public class ReceiptServiceImpl implements ReceiptService {
     }
 
     private List<ProductDto> getProductDtoList(PaymentDto paymentDto) {
-        List<ProductPaymentDto> productPaymentDto = paymentDto.getProducts();
-        return productPaymentDto.stream()
-                .map(this::convertToProductDto)
-                .toList();
+        List<ProductPaymentDto> productPaymentDtoList = paymentDto.getProducts();
+        if (productPaymentDtoList == null) {
+            return null;
+        }
+        List<ProductDto> productDtoList = new ArrayList<>();
+        for (ProductPaymentDto productPaymentDto : productPaymentDtoList) {
+            ProductDto productDto = convertToProductDto(productPaymentDto);
+            if (productDto != null) {
+                productDtoList.add(productDto);
+            }
+        }
+        return productDtoList;
     }
 
     private ProductDto convertToProductDto(ProductPaymentDto productPaymentDto) {
         Product product = productRepository.findById(productPaymentDto.getProductId()).get();
+        if (product == null) {
+            return null;
+        }
         String name = product.getName();
         BigDecimal price = product.getPrice();
         Integer quantity = productPaymentDto.getQuantity();
         BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         boolean isDiscount = false;
         if (productPaymentDto.getQuantity() > Constants.PRODUCT_AMOUNT_FOR_DISCOUNT) {
-            totalPrice = totalPrice.multiply(BigDecimal.valueOf(Constants.FULL_PRICE_VALUE - Constants.DISCOUNT_VALUE));
+            totalPrice = totalPrice.multiply(BigDecimal.valueOf(Constants.FULL_PRICE_VALUE - Constants.DISCOUNT_VALUE_FOR_PRODUCT_AMOUNT));
             isDiscount = true;
         }
         return new ProductDto.Builder()
@@ -120,13 +151,15 @@ public class ReceiptServiceImpl implements ReceiptService {
             lines.add(product.toString());
             lines.add(Constants.EMPTY_LINE);
             if (product.isDiscount()) {
-                lines.add(String.format(ConstantsReceiptTemplate.DISCOUNT_FORMAT_LINE, Constants.DISCOUNT_VALUE * Constants.DISCOUNT_PERCENT_COEFFICIENT));
+                lines.add(String.format(ConstantsReceiptTemplate.DISCOUNT_FORMAT_LINE, Constants.DISCOUNT_VALUE_FOR_PRODUCT_AMOUNT * Constants.DISCOUNT_PERCENT_COEFFICIENT));
                 lines.add(Constants.EMPTY_LINE);
             }
         }
         lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);
-        lines.add(cardDto.toString() + "\n");
-        lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);
+        if (cardDto != null) {
+            lines.add(cardDto + "\n");
+            lines.add(ConstantsReceiptTemplate.LINE_SEPARATOR);
+        }
         lines.add(String.format(ConstantsReceiptTemplate.TAXABLE_FORMAT_LINE, receiptDto.getTaxableTotal()));
         lines.add(String.format(ConstantsReceiptTemplate.VAT_FORMAT_LINE, Constants.VAT_VALUE * Constants.DISCOUNT_PERCENT_COEFFICIENT, receiptDto.getVatAmount()));
         lines.add(String.format(ConstantsReceiptTemplate.TOTAL_FORMAT_LINE, receiptDto.getTotalForPayment()));
