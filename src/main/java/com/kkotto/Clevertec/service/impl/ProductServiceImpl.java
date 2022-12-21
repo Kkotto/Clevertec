@@ -8,7 +8,9 @@ import com.kkotto.Clevertec.service.util.consts.Constants;
 import com.kkotto.Clevertec.service.util.FileUtil;
 import com.kkotto.Clevertec.service.util.IdNotFoundException;
 import com.kkotto.Clevertec.service.util.DateTimeUtil;
+import com.kkotto.Clevertec.service.util.consts.ConstantsResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,12 +29,12 @@ public class ProductServiceImpl implements ProductService {
     private final DateTimeUtil dateTimeUtil = DateTimeUtil.getInstance();
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) {
+    public ResponseEntity<String> createProduct(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
-        Product save = productRepository.save(product);
-        return convertToProductDto(save);
+        productRepository.save(product);
+        return new ResponseEntity<>(ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE_MSG, ConstantsResponses.SUCCESSFULLY_SAVED_RESPONSE);
     }
 
     private Product saveProduct(Product product) {
