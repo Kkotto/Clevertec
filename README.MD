@@ -2,6 +2,9 @@
 
 [![wakatime](https://wakatime.com/badge/user/f7dbe84c-6f3c-42e2-b6ac-fcc958d0eabb/project/0ac0a675-86f8-473a-a104-735539a6050c.svg)](https://wakatime.com/badge/user/f7dbe84c-6f3c-42e2-b6ac-fcc958d0eabb/project/0ac0a675-86f8-473a-a104-735539a6050c)
 
+Полное задание: [Тестовое задание Backend Dev Course.pdf](https://github.com/Kkotto/Clevertec/files/10550963/Backend.Dev.Course.pdf)
+
+
 1. Используется Java 17, Gradle 7.5.1.
 2. Используется Spring, Liquibase, Postgres & Docker.
 3. Для билда проекта используйте команду терминала ./gradlew build.
