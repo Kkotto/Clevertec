@@ -10,7 +10,7 @@
   - [Работа с файлами](#Работа-с-файлами)
 - [English](#English)
   - [Endpoints](#Endpoints)
-  - [Working with files](#Working with files)
+  - [Working with files](#Working-with-files)
 
 # Russian
 
