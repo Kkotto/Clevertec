@@ -51,3 +51,41 @@
 - Готовый к чтению файл: [Products-22-12-2022 01-16-55.csv](https://github.com/Kkotto/Clevertec/files/10282370/Products-22-12-2022.01-16-55.csv)
 
 # English
+
+1. Versioning: Java 17, Gradle 7.5.1.
+2. Stack: Spring, Liquibase, Postgres & Docker.
+3. To build the project, use ./gradlew build.
+
+## Endpoints
+
+Project endpoints:
+- Add discount card: POST http://localhost:5869/api/card 
+- Generate receipt: POST http://localhost:5869/api/receipt
+- Add product: POST http://localhost:5869/api/product
+- Delete product: DELETE http://localhost:5869/api/product?productId=
+- Update product: PUT http://localhost:5869/api/product?productId=
+- Write all products to file: GET http://localhost:5869/api/get-product-list
+- Read all products from file (with saving products to the databse): POST http://localhost:5869/api/read-product-list
+
+## Working with files
+
+### Receipt generation
+
+- All receipts are saved to the Receipts directory.
+- The Receipt directory is automatically created at the root of the project.
+- Receipts are generated in a .txt file.
+- The file name for receipts follows the format: "Receipt dd-MM-yyyy HH-mm-ss.txt".
+
+### Writing Products to the file
+
+- The file is generated to the Products directory.
+- The Products directory is automatically created at the root of the project.
+- The file format is .csv. 
+- The file name for products follows the format: "Products-dd-MM-yyyy HH-mm-ss.csv".
+
+### Reading Products from the file
+
+- The file format is .csv.
+- Send the file in the request body (body - form-data - key: file, value: файл в формате .csv)
+- Valid records in the format of "id;name;price;createAt" are saved to the database.
+- Sample file (ready for usa): [Products-22-12-2022 01-16-55.csv](https://github.com/Kkotto/Clevertec/files/10282370/Products-22-12-2022.01-16-55.csv)
