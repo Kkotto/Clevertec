@@ -4,8 +4,11 @@
 
 Полное задание: [Тестовое задание Backend Dev Course.pdf](https://github.com/Kkotto/Clevertec/files/10550963/Backend.Dev.Course.pdf)
 
-# Read in [Russian](#Russian)
-# Read in [English](#English)
+# Table of contents
+- [Russian](#Russian)
+  - [Эндпоинты](#Эндпоинты)
+  - [Работа с файлами](#Работа-с-файлами)
+- [English](#English)
 
 # Russian
 
