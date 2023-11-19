@@ -4,6 +4,10 @@
 
 Полное задание: [Тестовое задание Backend Dev Course.pdf](https://github.com/Kkotto/Clevertec/files/10550963/Backend.Dev.Course.pdf)
 
+- [Russian](#Russian)
+- [English](#English)
+
+# Russian
 
 1. Используется Java 17, Gradle 7.5.1.
 2. Используется Spring, Liquibase, Postgres & Docker.
@@ -43,3 +47,4 @@
 - Валидные записи формата "id;name;price;createAt" сохраняются в БД.
 - Готовый к чтению файл: [Products-22-12-2022 01-16-55.csv](https://github.com/Kkotto/Clevertec/files/10282370/Products-22-12-2022.01-16-55.csv)
 
+# English
